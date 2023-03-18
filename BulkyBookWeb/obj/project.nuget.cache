@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "3D9/cM777R6R+0fuwkjJttAd5ol1SRAbwvlBkU5y/7RnaB7KfccTO0d0pumH8AkERxMddbwu1m7jrFKJphNi2Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Maurizio Sodano\\Documents\\Udemy\\BulkyBook\\BulkyBookWeb\\BulkyBookWeb.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Maurizio Sodano\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
+    "C:\\Users\\Maurizio Sodano\\.nuget\\packages\\microsoft.aspnetcore.razor\\2.2.0\\microsoft.aspnetcore.razor.2.2.0.nupkg.sha512",
+    "C:\\Users\\Maurizio Sodano\\.nuget\\packages\\microsoft.aspnetcore.razor.runtime\\2.2.0\\microsoft.aspnetcore.razor.runtime.2.2.0.nupkg.sha512",
+    "C:\\Users\\Maurizio Sodano\\.nuget\\packages\\system.text.encodings.web\\4.5.0\\system.text.encodings.web.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}

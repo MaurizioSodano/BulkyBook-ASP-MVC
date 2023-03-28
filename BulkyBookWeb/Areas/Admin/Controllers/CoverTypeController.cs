@@ -16,8 +16,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<CoverType> objCategoryList = _db.CoverTypes;
-            return View(objCategoryList);
+            IEnumerable<CoverType> objCoverTypeList = _db.CoverTypes;
+            return View(objCoverTypeList);
         }
         //Get
         public IActionResult Create()

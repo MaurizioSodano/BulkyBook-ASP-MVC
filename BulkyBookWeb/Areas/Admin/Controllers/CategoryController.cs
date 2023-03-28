@@ -2,15 +2,16 @@
 using BulkyBook.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BulkyBookWeb.Controllers
+namespace BulkyBookWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _db;
 
         public CategoryController(ApplicationDbContext applicationDbContext)
         {
-            this._db = applicationDbContext;
+            _db = applicationDbContext;
         }
 
         public IActionResult Index()

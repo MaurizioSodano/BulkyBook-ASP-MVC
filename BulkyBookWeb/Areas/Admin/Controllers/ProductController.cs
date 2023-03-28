@@ -1,5 +1,6 @@
 ﻿using BulkyBook.Data;
 using BulkyBook.Models;
+using BulkyBook.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -23,27 +24,29 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            Product product = new();
-
-            IEnumerable<SelectListItem> CategoryList = _db.Categories.Select( //Projection
+            ProductVM productVM = new()
+            {
+                Product = new(),
+                CategoryList = _db.Categories.Select(
+                u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+                CoverTypeList = _db.CoverTypes.Select( //Projection
                 u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString(),
-                });
+                })
+            };
 
-            IEnumerable<SelectListItem> CoverTypeList = _db.CoverTypes.Select( //Projection
-                u => new SelectListItem
-                {
-                    Text = u.Name,
-                    Value = u.Id.ToString(),
-                });
+
             if (id == null || id == 0)
             {
                 //create product
-                ViewBag.CategoryList = CategoryList;
-                ViewData["CoverTypeList"] = CoverTypeList;
-                return View(product);
+
+                return View(productVM);
             }
             else
             {
@@ -54,7 +57,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 //    return NotFound();
                 //}
             }
-            return View(product);
+            return View(productVM);
         }
 
         //Post

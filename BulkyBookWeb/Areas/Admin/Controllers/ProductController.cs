@@ -63,27 +63,27 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         //Post
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Product obj)
+        public IActionResult Upsert(ProductVM obj, IFormFile file)
         {
 
             if (ModelState.IsValid)
             {
-                var productFromDb = _db.Products.Find(obj.Id);
+                var productFromDb = _db.Products.Find(obj.Product.Id);
                 if (productFromDb != null)
                 {
-                    productFromDb.Title = obj.Title;
-                    productFromDb.ISBN = obj.ISBN;
-                    productFromDb.ListPrice = obj.ListPrice;
-                    productFromDb.Price = obj.Price;
-                    productFromDb.Price50 = obj.Price50;
-                    productFromDb.Price100 = obj.Price100;
-                    productFromDb.Description = obj.Description;
-                    productFromDb.CategoryId = obj.CategoryId;
-                    productFromDb.Author = obj.Author;
-                    productFromDb.CoverTypeId = obj.CoverTypeId;
-                    if (obj.ImageUrl != null)
+                    productFromDb.Title = obj.Product.Title;
+                    productFromDb.ISBN = obj.Product.ISBN;
+                    productFromDb.ListPrice = obj.Product.ListPrice;
+                    productFromDb.Price = obj.Product.Price;
+                    productFromDb.Price50 = obj.Product.Price50;
+                    productFromDb.Price100 = obj.Product.Price100;
+                    productFromDb.Description = obj.Product.Description;
+                    productFromDb.CategoryId = obj.Product.CategoryId;
+                    productFromDb.Author = obj.Product.Author;
+                    productFromDb.CoverTypeId = obj.Product.CoverTypeId;
+                    if (file != null)
                     {
-                        productFromDb.ImageUrl = obj.ImageUrl;
+                        productFromDb.ImageUrl = file.FileName;
                     }
 
                 }

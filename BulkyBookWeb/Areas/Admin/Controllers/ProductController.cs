@@ -10,10 +10,12 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductController(ApplicationDbContext applicationDbContext)
+        public ProductController(ApplicationDbContext applicationDbContext, IWebHostEnvironment hostEnvironment)
         {
             _db = applicationDbContext;
+            _hostEnvironment = hostEnvironment;
         }
 
         public IActionResult Index()
@@ -63,11 +65,25 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         //Post
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(ProductVM obj, IFormFile file)
+        public IActionResult Upsert(ProductVM obj, IFormFile? file)
         {
 
             if (ModelState.IsValid)
             {
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString(); //creates unique fileName
+                    var uploads = Path.Combine(wwwRootPath, @"images\products");  //concatenates the folder path
+                    var extension = Path.GetExtension(file.FileName); // get the original file Extension
+
+                    using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                    {
+                        file.CopyTo(fileStreams); //copy the file
+                    }
+                    obj.Product.ImageUrl = @"\images\products\" + fileName + extension;
+
+                }
                 var productFromDb = _db.Products.Find(obj.Product.Id);
                 if (productFromDb != null)
                 {
@@ -83,9 +99,13 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     productFromDb.CoverTypeId = obj.Product.CoverTypeId;
                     if (file != null)
                     {
-                        productFromDb.ImageUrl = file.FileName;
+                        productFromDb.ImageUrl = obj.Product.ImageUrl;
                     }
 
+                }
+                else
+                {
+                    _db.Products.Add(obj.Product);
                 }
                 //_db.Products.Update(obj);
                 _db.SaveChanges();

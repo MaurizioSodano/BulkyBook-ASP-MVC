@@ -1,8 +1,8 @@
 ﻿using BulkyBook.Data;
-using BulkyBook.Models;
 using BulkyBook.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace BulkyBookWeb.Areas.Admin.Controllers
 {
@@ -20,8 +20,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> objProductList = _db.Products;
-            return View(objProductList);
+            return View();
         }
 
         public IActionResult Upsert(int? id)
@@ -53,11 +52,11 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             else
             {
                 //update product
-                //var productFromDb = _db.Products.Find(id);
-                //if (productFromDb == null)
-                //{
-                //    return NotFound();
-                //}
+                productVM.Product = _db.Products.Find(id);
+                if (productVM.Product == null)
+                {
+                    return NotFound();
+                }
             }
             return View(productVM);
         }
@@ -145,5 +144,15 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             TempData["success"] = "Product deleted successfully";
             return RedirectToAction("Index");
         }
+        #region API CALLS
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var productList = _db.Products.Include(u => u.Category).Include(u => u.CoverType);
+            return Json(new { data = productList });
+        }
+        #endregion
     }
+
+
 }

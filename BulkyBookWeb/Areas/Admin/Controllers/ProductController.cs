@@ -61,7 +61,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             return View(productVM);
         }
 
-        //Post
+    //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(ProductVM obj, IFormFile? file)
@@ -125,41 +125,34 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
         }
 
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            var productFromDb = _db.Products.Find(id);
-            if (productFromDb == null)
-            {
-                return NotFound();
-            }
-            return View(productFromDb);
-        }
 
-        //Post
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeletePOST(int? id)
-        {
-            var obj = _db.Products.Find(id);
-            if (obj == null)
-            {
-                return NotFound();
-            }
-            _db.Products.Remove(obj);
-            _db.SaveChanges();
-            TempData["success"] = "Product deleted successfully";
-            return RedirectToAction("Index");
-        }
+
+
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll()
         {
             var productList = _db.Products.Include(u => u.Category).Include(u => u.CoverType);
             return Json(new { data = productList });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var obj = _db.Products.Find(id);
+            if (obj == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+            _db.Products.Remove(obj);
+            _db.SaveChanges();
+
+            return Json(new { success = true, message = "Delete Successful" });
         }
         #endregion
     }

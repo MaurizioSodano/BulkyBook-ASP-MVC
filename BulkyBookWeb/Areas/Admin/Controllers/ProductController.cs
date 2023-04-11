@@ -1,20 +1,21 @@
-﻿using BulkyBook.Data;
+﻿using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace BulkyBookWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductController(ApplicationDbContext applicationDbContext, IWebHostEnvironment hostEnvironment)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IUnitOfWork _UnitOfWork;
+
+
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
-            _db = applicationDbContext;
+            this._UnitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
         }
 
@@ -28,13 +29,13 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             ProductVM productVM = new()
             {
                 Product = new(),
-                CategoryList = _db.Categories.Select(
+                CategoryList = _UnitOfWork.Category.GetAll().Select(
                 u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
                 }),
-                CoverTypeList = _db.CoverTypes.Select( //Projection
+                CoverTypeList = _UnitOfWork.CoverType.GetAll().Select( //Projection
                 u => new SelectListItem
                 {
                     Text = u.Name,
@@ -52,7 +53,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             else
             {
                 //update product
-                productVM.Product = _db.Products.Find(id);
+                productVM.Product = _UnitOfWork.Product.Get(u => u.Id == id);
                 if (productVM.Product == null)
                 {
                     return NotFound();
@@ -61,7 +62,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             return View(productVM);
         }
 
-    //POST
+        //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(ProductVM obj, IFormFile? file)
@@ -93,31 +94,16 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     obj.Product.ImageUrl = @"\images\products\" + fileName + extension;
 
                 }
-                var productFromDb = _db.Products.Find(obj.Product.Id);
-                if (productFromDb != null)
+                if (obj.Product.Id == 0)
                 {
-                    productFromDb.Title = obj.Product.Title;
-                    productFromDb.ISBN = obj.Product.ISBN;
-                    productFromDb.ListPrice = obj.Product.ListPrice;
-                    productFromDb.Price = obj.Product.Price;
-                    productFromDb.Price50 = obj.Product.Price50;
-                    productFromDb.Price100 = obj.Product.Price100;
-                    productFromDb.Description = obj.Product.Description;
-                    productFromDb.CategoryId = obj.Product.CategoryId;
-                    productFromDb.Author = obj.Product.Author;
-                    productFromDb.CoverTypeId = obj.Product.CoverTypeId;
-                    if (file != null)
-                    {
-                        productFromDb.ImageUrl = obj.Product.ImageUrl;
-                    }
-
+                    _UnitOfWork.Product.Add(obj.Product);
                 }
                 else
                 {
-                    _db.Products.Add(obj.Product);
+                    _UnitOfWork.Product.Update(obj.Product);
                 }
-                //_db.Products.Update(obj);
-                _db.SaveChanges();
+
+                _UnitOfWork.Save();
                 TempData["success"] = "Product updated successfully";
                 return RedirectToAction("Index");
             }
@@ -132,14 +118,14 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var productList = _db.Products.Include(u => u.Category).Include(u => u.CoverType);
+            var productList = _UnitOfWork.Product.GetAll(includeProperties: "Category,CoverType");//.Include(u => u.Category).Include(u => u.CoverType);
             return Json(new { data = productList });
         }
 
         [HttpDelete]
         public IActionResult Delete(int? id)
         {
-            var obj = _db.Products.Find(id);
+            var obj = _UnitOfWork.Product.Get(u => u.Id == id);
             if (obj == null)
             {
                 return Json(new { success = false, message = "Error while deleting" });
@@ -149,8 +135,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             {
                 System.IO.File.Delete(oldImagePath);
             }
-            _db.Products.Remove(obj);
-            _db.SaveChanges();
+            _UnitOfWork.Product.Remove(obj);
+            _UnitOfWork.Save();
 
             return Json(new { success = true, message = "Delete Successful" });
         }

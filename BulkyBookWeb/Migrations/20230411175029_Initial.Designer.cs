@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BulkyBookWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230328160030_addProduct")]
-    partial class addProduct
+    [Migration("20230411175029_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,6 +46,29 @@ namespace BulkyBookWeb.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 6,
+                            CreatedDateTime = new DateTime(2023, 4, 11, 19, 50, 28, 932, DateTimeKind.Local).AddTicks(7304),
+                            DisplayOrder = 1,
+                            Name = "Action"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedDateTime = new DateTime(2023, 4, 11, 19, 50, 28, 932, DateTimeKind.Local).AddTicks(7342),
+                            DisplayOrder = 2,
+                            Name = "SciFy"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedDateTime = new DateTime(2023, 4, 11, 19, 50, 28, 932, DateTimeKind.Local).AddTicks(7345),
+                            DisplayOrder = 3,
+                            Name = "History"
+                        });
                 });
 
             modelBuilder.Entity("BulkyBook.Models.CoverType", b =>

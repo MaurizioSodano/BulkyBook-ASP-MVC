@@ -1,9 +1,9 @@
 ﻿var dataTable;
 
 $(document).ready(function () {
-    console.log("test")
+    
     loadDataTable();
-    console.log(dataTable)
+   
 })
 
 
@@ -14,11 +14,11 @@ function loadDataTable() {
             "url":"/Admin/Product/GetAll"
         },
         "columns": [
-            { "data": "title", "width": "15%" },
+            { "data": "title", "width": "25%" },
             { "data": "isbn", "width": "15%" },
-            { "data": "price", "width": "15%" },
+            { "data": "price", "width": "10%" },
             { "data": "author", "width": "15%" },
-            { "data": "category.name", "width": "15%" },
+            { "data": "category.name", "width": "10%" },
             {
                 "data": "id",
                 "render": function (data) {
@@ -30,7 +30,7 @@ function loadDataTable() {
                         class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                          </div>
                     `
-                }, "width": "15%"
+                }, "width": "25%"
             }
 
         ]

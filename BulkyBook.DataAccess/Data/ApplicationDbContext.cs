@@ -12,7 +12,7 @@ namespace BulkyBook.Data
         {
 
         }
-
+        public DbSet<ApplicationUser> applicationUsers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CoverType> CoverTypes { get; set; }
         public DbSet<Product> Products { get; set; }

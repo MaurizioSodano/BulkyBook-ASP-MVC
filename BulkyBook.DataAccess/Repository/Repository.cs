@@ -34,9 +34,18 @@ namespace BulkyBook.DataAccess.Repository
             return query.ToList();
         }
 
-        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query;
+            if (tracked)
+            {
+                query = dbSet;
+            }
+            else
+            {
+                query = dbSet.AsNoTracking();
+            }
+
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var property in includeProperties

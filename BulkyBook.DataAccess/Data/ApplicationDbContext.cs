@@ -15,6 +15,7 @@ namespace BulkyBook.Data
         public DbSet<ApplicationUser> applicationUsers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CoverType> CoverTypes { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Company> Companies { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

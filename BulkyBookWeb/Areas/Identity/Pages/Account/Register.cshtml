@@ -15,7 +15,7 @@
             <div class="col-md-12">
                 <form id="registerForm" class="row" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     <h3 class="border-bottom pb-3 mb-4 text-secondary text-center">Create a new account.</h3>
-    
+
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-floating col-12">
                         <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
@@ -24,13 +24,38 @@
                     </div>
                     <div class="form-floating col-md-6">
                         <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                            <label asp-for="Input.Password" class="ms-2 text-muted"></label>
+                        <label asp-for="Input.Password" class="ms-2 text-muted"></label>
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
-                        <div class="form-floating col-md-6">
+                    <div class="form-floating col-md-6">
                         <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
-                            <label asp-for="Input.ConfirmPassword" class="ms-2 text-muted"></label>
+                        <label asp-for="Input.ConfirmPassword" class="ms-2 text-muted"></label>
                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating col-6">
+                        <input asp-for="Input.StreetAddress" class="form-control" aria-required="true" />
+                        <label asp-for="Input.StreetAddress" class="ms-2 text-muted"></label>
+                        <span asp-validation-for="Input.StreetAddress" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating col-6">
+                        <input asp-for="Input.City" class="form-control" aria-required="true" />
+                        <label asp-for="Input.City" class="ms-2 text-muted"></label>
+                        <span asp-validation-for="Input.City" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating col-6">
+                        <input asp-for="Input.State" class="form-control" aria-required="true" />
+                        <label asp-for="Input.State" class="ms-2 text-muted"></label>
+                        <span asp-validation-for="Input.State" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating col-6">
+                        <input asp-for="Input.PostalCode" class="form-control" aria-required="true" />
+                        <label asp-for="Input.PostalCode" class="ms-2 text-muted"></label>
+                        <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating col-6">
+                        <input asp-for="Input.PhoneNumber" class="form-control" aria-required="true" />
+                        <label asp-for="Input.PhoneNumber" class="ms-2 text-muted"></label>
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                     </div>
                     <div class="form-floating  col-md-6">
                         <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
@@ -44,7 +69,7 @@
                     </div>
                     <div class="col-12">
 
-                    <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                        <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
                     </div>
                 </form>
             </div>
@@ -91,15 +116,15 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        $(document).ready(function() {
-            $('#Input_Role').change(function() {
+        $(document).ready(function () {
+            $('#Input_Role').change(function () {
                 var selection = $('#Input_Role Option:Selected').text();
-                if (selection=='Company'){
+                if (selection == 'Company') {
                     $('#Input_CompanyId').show();
-                }else{
+                } else {
                     $('#Input_CompanyId').hide();
                 }
             })
         })
     </script>
-} 
+}
